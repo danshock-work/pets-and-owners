@@ -1,9 +1,7 @@
 const fs = require('fs');
 
-const createPet = (ownerID, data, cb) => {};
-
-const fetchPetById = (id, cb) => {
-  fs.readFile(`./data/pets/p${id}.json`, 'utf8', (err, fileContents) => {
+const fetchPetByID = (petID, cb) => {
+  fs.readFile(`./data/pets/${petID}.json`, 'utf8', (err, fileContents) => {
     cb(null, JSON.parse(fileContents));
   });
 };
@@ -24,16 +22,7 @@ const fetchPetsByOwnerId = (ownerID, cb) => {
   });
 };
 
-const deletePetById = (id, cb) => {
-  fs.unlink(`./data/pets/p${id}`, (err) => {
-    if (err) throw err;
-    cb(null, `p${id} was successfully deleted...`);
-  });
-};
-
 module.exports = {
-  createPet,
-  fetchPetById,
+  fetchPetByID,
   fetchPetsByOwnerId,
-  deletePetById,
 };

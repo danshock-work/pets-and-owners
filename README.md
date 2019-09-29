@@ -1,6 +1,5 @@
 # Pets and Owners
 
-
 ## Objectives
 
 1. Learn how to build and test a web server `http`, `jest` and other libraries
@@ -22,7 +21,7 @@ Here's a nice article to help with your understanding of this pattern:
 
 Now you will need to create a new web server that will implement the following:
 
-In this sprint, we are going to create a fully functioning server that can handle the following requests: - GET - POST - PATCH - DELETE
+In this sprint, we are going to create a server that can handle several different `GET` request end-points.
 
 All of these routes should start with `/api/` as we are creating an API. Make them restful!
 
@@ -62,27 +61,12 @@ Follow the same design flow when implementing the following end-points:
 - end-point url : `/api/owners/:owner_id`
 - method : `GET`
 
+#### - GET a pet using their id
+
+- end-point url : `/api/owners/:owner_id`
+- method : `GET`
+
 #### - GET all pets belonging to an owner
 
 - end-point url: `/api/owners/:owner_id/pets`
 - method : `GET`
-
-#### - DELETE single pet using their id
-
-- end-point url: `/api/pets/:pet_id`,
-- method: `DELETE`
-
-2. PATCH (don't forget to use `express.json()` to access the request body!):
-
-   - ability to update owners name and age /owners/:id
-
-3. POST (don't forget to use `express.json()` to access the request body!):
-
-   - add an owner
-     - Must be same format (contain the same information), you should check the other owner files for this.
-     - Use a timestamp for the id, affixed with the relevant letter, o or p
-   - add a pet to an owner (owner must exist) - /owners/:id/pets
-
-4. DELETE:
-
-   - delete an owner (and therefore any of their pets)

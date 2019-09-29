@@ -1,1 +1,1 @@
-const { createPet, fetchPetById, fetchPetsByOwnerId, deletePetById } = require('../models/pets.js');
+const { fetchPetById, fetchPetsByOwnerId } = require('../models/pets.js');

@@ -1,7 +1,7 @@
 jest.mock('fs');
-const { readFile, readdir, writeFile, unlink } = require('fs');
+const { readFile, readdir } = require('fs');
 const { sample } = require('lodash');
-const { createPet, fetchPetById, fetchPetsByOwnerId, deletePetById } = require('./pets');
+const { fetchPetByID, fetchPetsByOwnerId } = require('./pets');
 const { createRandomPetsData, createRandomOwnerData } = require('./test-utils');
 
 expect.extend({
@@ -73,7 +73,7 @@ describe('models - unit tests', () => {
             const stringifiedPet = JSON.stringify(petsData[petID]);
             if (Object.keys(petsData).includes(petID)) cb(null, stringifiedPet);
           } else cb(new Error(`ENOENT: no such file or directory, open ${fileName}`));
-        }, Math.random() * 500);
+        }, Math.random() * 100);
       });
     });
     afterEach(() => {
@@ -95,6 +95,15 @@ describe('models - unit tests', () => {
         const randomOwnerID = sample(Object.keys(ownersData));
         fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
           expect(pets).toEqual(Object.values(petsData).filter(({ owner }) => owner === randomOwnerID));
+          done();
+        });
+      });
+    });
+    describe('fetchPetByID()', () => {
+      test('should fetch a single owner from the file system', (done) => {
+        const id = sample(Object.keys(petsData));
+        fetchPetByID(id, (err, pet) => {
+          expect(pet).toEqual(petsData[id]);
           done();
         });
       });

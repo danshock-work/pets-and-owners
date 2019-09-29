@@ -9,16 +9,12 @@ expect.extend({
     const pass = typeof inputReceived === 'function';
     if (pass) {
       return {
-        message: () => {
-          return 'expected input is a function';
-        },
+        message: () => 'expected input is a function',
         pass: true,
       };
     } else {
       return {
-        message: () => {
-          return 'expected input is not a function';
-        },
+        message: () => 'expected input is not a function',
         pass: false,
       };
     }
@@ -33,16 +29,12 @@ expect.extend({
     });
     if (pass) {
       return {
-        message: () => {
-          return 'this input is in ascending order';
-        },
+        message: () => 'this input is in ascending order',
         pass: true,
       };
     } else {
       return {
-        message: () => {
-          return 'input is not in ascending order';
-        },
+        message: () => 'input is not in ascending order',
         pass: false,
       };
     }
