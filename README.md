@@ -50,7 +50,9 @@ We need to test the actual API endpoint by proving the correct data comes back f
 - method : `GET`
 
 1. Unit test the model - `fetchAllOwners()`, use `./models/pets.test.js` (tests are already written for you)
+
 2. Unit test the controller - `getOwners()`, use `./models/owners.test.js`
+
 3. Integration test the end-point - ensure the controller and model are interacting correctly, use `./server.test.js`
 
 Follow the same design flow when implementing the following end-points:

@@ -1,8 +1,8 @@
 jest.mock('fs');
 const { readFile, readdir, writeFile, unlink } = require('fs');
-const faker = require('faker');
 const { sample } = require('lodash');
 const { createPet, fetchPetById, fetchPetsByOwnerId, deletePetById } = require('./pets');
+const { createRandomPetsData, createRandomOwnerData } = require('./test-utils');
 
 expect.extend({
   toBeAFunction: (inputReceived) => {
@@ -49,114 +49,55 @@ expect.extend({
   },
 });
 
-describe('pets models - unit tests', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe('fetchPetById', () => {
-    test('readFile is invoked with the filePath, encoding and a callback function', (done) => {
-      fetchPetById(1, (err, owners) => {});
-      const firstCallArgs = readFile.mock.calls[0];
-      expect(firstCallArgs[0]).toBe('./data/pets/p1.json');
-      expect(firstCallArgs[1]).toBe('utf8');
-      expect(firstCallArgs[2]).toBeAFunction();
-      done();
-    });
-
-    test('callback is invoked with the owner object (for valid id)', (done) => {
-      fetchPetById(1, (err, pet) => {
-        expect(err).toBeNull();
-        expect(pet).toHaveProperty('id');
-        expect(pet).toHaveProperty('name');
-        expect(pet).toHaveProperty('avatarUrl');
-        expect(pet).toHaveProperty('favouriteFood');
-        expect(pet.id).toEqual('p1');
-        done();
+describe('models - unit tests', () => {
+  describe('pets models - unit tests', () => {
+    let ownersData;
+    let petsData;
+    beforeEach(() => {
+      ownersData = createRandomOwnerData();
+      petsData = createRandomPetsData(Object.keys(ownersData));
+      readdir.mockImplementation((directory, cb) => {
+        if (directory.includes('./data/owners')) cb(null, Object.keys(ownersData).map((id) => `${id}.json`));
+        else if (directory.includes('./data/pets')) cb(null, Object.keys(petsData).map((id) => `${id}.json`));
+        else cb(new Error(`ENOENT: no such file or directory, open ${directory}`));
+      });
+      readFile.mockImplementation((fileName, encoding, cb) => {
+        let ownerID, petID;
+        setTimeout(() => {
+          if (/\.\/data\/owners\/(o\d*)/.test(fileName)) {
+            [_, petID] = fileName.match(/\.\/data\/owners\/(o\d*)/);
+            const stringifiedOwner = JSON.stringify(ownersData[ownerID]);
+            if (Object.keys(ownersData).includes(ownerID)) cb(null, stringifiedOwner);
+          } else if (/\.\/data\/pets\/(p\d*)/.test(fileName)) {
+            [_, petID] = fileName.match(/\.\/data\/pets\/(p\d*)/);
+            const stringifiedPet = JSON.stringify(petsData[petID]);
+            if (Object.keys(petsData).includes(petID)) cb(null, stringifiedPet);
+          } else cb(new Error(`ENOENT: no such file or directory, open ${fileName}`));
+        }, Math.random() * 500);
       });
     });
-  });
-
-  describe('deletePetById()', () => {
-    test('model invokes unlink method from fs', (done) => {
-      deletePetById(1, () => {});
-      expect(unlink).toHaveBeenCalledTimes(1);
-      done();
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
-    test('unlink is invoked with the correct file path and a callback', (done) => {
-      const randomID = Math.ceil(Math.random() * 20);
-      deletePetById(randomID, () => {});
-      expect(unlink.mock.calls[0][0]).toBe(`./data/pets/p${randomID}`);
-      expect(unlink.mock.calls[0][1]).toBeAFunction();
-      done();
-    });
-
-    test('callback is invoked with a message saying item was deleted when unlink is not invoked with error', (done) => {
-      const randomID = Math.ceil(Math.random() * 20);
-      unlink.mockImplementationOnce((filePath, cb) => cb(null));
-      deletePetById(randomID, (err, response) => {
-        expect(response).toBe(`p${randomID} was successfully deleted...`);
-        done();
+    describe('fetchPetsByOwnerId()', () => {
+      test('fetch all the pets with a particular owner id', (done) => {
+        const randomOwnerID = sample(Object.keys(ownersData));
+        fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
+          const allHaveOwnerID = pets.every(({ owner }) => {
+            return owner === randomOwnerID;
+          });
+          expect(allHaveOwnerID).toBe(true);
+          done();
+        });
       });
-    });
-  });
-
-  describe('createPet()', () => {
-    test('readdir is invoked by the model', (done) => {
-      const data = {
-        name: 'sam',
-        age: 31,
-      };
-      createPet(1, data, function() {});
-      const readdirFirstArgs = readdir.mock.calls[0];
-      expect(readdirFirstArgs[0]).toBe('./data/pets');
-      expect(readdirFirstArgs[1]).toBeAFunction();
-      done();
-    });
-
-    test('writeFile is invoked with the correct file path and data in the correct form', (done) => {
-      const ownersDirectory = ['o1', 'o2', 'o3', 'o4', 'o5'];
-      const petsDirectory = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10', 'p11', 'p12', 'p13'];
-      const randomOwnerID = sample(ownersDirectory);
-      const randomPet = {
-        name: faker.name.findName(),
-        avatarUrl: faker.internet.url(),
-        favouriteFood: faker.random.word(),
-      };
-      readdir.mockImplementationOnce((directoryName, cb) => {
-        if (directoryName.startsWith('./data/owners')) cb(null, ownerDirectory);
-        else if (directoryName.startsWith('./data/pets')) cb(null, petsDirectory);
+      test('fetch all the pets with a particular owner id (in ascending order)', (done) => {
+        const randomOwnerID = sample(Object.keys(ownersData));
+        fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
+          expect(pets).toEqual(Object.values(petsData).filter(({ owner }) => owner === randomOwnerID));
+          done();
+        });
       });
-      createPet(+randomOwnerID.slice(1), randomPet, function() {
-        const writeFileArgs = writeFile.mock.calls[0];
-        expect(writeFileArgs[0]).toBe(`./data/pets/p14.json`);
-        expect(JSON.parse(writeFileArgs[1])).toEqual({ ...randomPet, id: 'p14', owner: randomOwnerID });
-        expect(writeFileArgs[2]).toBeAFunction();
-        done();
-      });
-    });
-    // test("callack is invoked with error if the given owner id doesn't exist", () => {});
-    // test('callback is invoked with the the newly added pet', (done) => {
-    //   const data = {
-    //     name: 'sam',
-    //     age: 31,
-    //   };
-    //   readdir.mockImplementationOnce((directory, cb) => cb(null, ['o1', 'o3', 'o4']));
-    //   createOwner(data, function(err, owner) {
-    //     expect(err).toBeNull();
-    //     expect(owner).toEqual({
-    //       ...data,
-    //       id: 'o5',
-    //     });
-    //     done();
-    //   });
-    // });
-  });
-
-  describe('fetchPetsByOwnerId()', () => {
-    test('readdir is invoked ', () => {
-      
     });
   });
 });
