@@ -1,9 +1,7 @@
-const { fetchAllOwners, fetchOwnerById } = require('../models/owners.js');
+const { fetchAllOwners, fetchOwnerById } = require('../models/owners');
 
-describe('controller middleware', () => {
-  describe('fetchAllOwners()', () => {
-    test('fetchAllOwners invokes a callback with the owners from the database', () => {
-      
-    });
-  });
-});
+const getOwners = () => {};
+
+const getOwnerByID = () => {};
+
+module.exports = { getOwners, getOwnerByID };
