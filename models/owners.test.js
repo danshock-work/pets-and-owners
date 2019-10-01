@@ -2,7 +2,7 @@ jest.mock('fs');
 const { readFile, readdir } = require('fs');
 const { sample } = require('lodash');
 const { fetchOwnerById, fetchAllOwners } = require('./owners');
-const { createRandomOwnerData } = require('./test-utils');
+const { createRandomOwnerData, mockReadDir, mockReadFile } = require('./test-utils');
 
 expect.extend({
   toBeAFunction: (inputReceived) => {
@@ -46,22 +46,10 @@ describe('models - unit tests', () => {
     let ownersData;
     beforeEach(() => {
       ownersData = createRandomOwnerData();
-      readdir.mockImplementation((directory, cb) => {
-        if (directory.includes('./data/owners')) cb(null, Object.keys(ownersData).map((id) => `${id}.json`));
-        else cb(new Error(`ENOENT: no such file or directory, open ${directory}`));
-      });
-      readFile.mockImplementation((fileName, encoding, cb) => {
-        let ownerID;
-        if (/\.\/data\/owners\/(o\d*)/.test(fileName)) {
-          [_, ownerID] = fileName.match(/\.\/data\/owners\/(o\d*)/);
-        }
-        if (Object.keys(ownersData).includes(ownerID)) cb(null, ownersData[ownerID]);
-        else cb(new Error(`ENOENT: no such file or directory, open ${fileName}`));
-      });
+      readdir.mockImplementation(mockReadDir(ownersData));
+      readFile.mockImplementation(mockReadFile(ownersData));
     });
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
 
     describe('fetchOwnerByID()', () => {
       test('should grab a single owner from the file system', (done) => {

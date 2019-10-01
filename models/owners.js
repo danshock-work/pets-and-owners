@@ -6,7 +6,7 @@ const fetchAllOwners = (cb) => {
   fs.readdir('./data/owners', (err, fileNames) => {
     fileNames.forEach((fileName, i) => {
       fs.readFile(`./data/owners/${fileName}`, 'utf8', (err, owner) => {
-        allOwners[i] = owner;
+        allOwners[i] = JSON.parse(owner);
         if (++callCount === fileNames.length) cb(null, allOwners);
       });
     });
@@ -15,7 +15,7 @@ const fetchAllOwners = (cb) => {
 
 const fetchOwnerById = (id, cb) => {
   fs.readFile(`./data/owners/${id}.json`, 'utf8', (err, owner) => {
-    cb(null, owner);
+    cb(null, JSON.parse(owner));
   });
 };
 
