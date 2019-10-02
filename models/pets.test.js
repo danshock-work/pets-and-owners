@@ -2,7 +2,7 @@ jest.mock('fs');
 const { readFile, readdir } = require('fs').promises;
 const { sample } = require('lodash');
 const { fetchPetByID, fetchPetsByOwnerId } = require('./pets');
-const { createRandomPetsData, createRandomOwnerData, mockReadDir, mockReadFile } = require('../test-utils');
+const { createRandomPetsData, createRandomOwnerData, fakeReadDir, fakeReadFile } = require('../test-utils');
 
 expect.extend({
   toBeAFunction: (inputReceived) => {
@@ -56,8 +56,8 @@ describe('models - unit tests', () => {
     beforeEach(() => {
       ownersData = createRandomOwnerData();
       petsData = createRandomPetsData(Object.keys(ownersData));
-      readdir.mockImplementation(mockReadDir(ownersData, petsData));
-      readFile.mockImplementation(mockReadFile(ownersData, petsData));
+      readdir.mockImplementation(fakeReadDir(ownersData, petsData));
+      readFile.mockImplementation(fakeReadFile(ownersData, petsData));
     });
     afterEach(() => {
       jest.clearAllMocks();

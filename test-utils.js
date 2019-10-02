@@ -35,7 +35,7 @@ const createRandomPetsData = (ownerIDs) => {
   return petData;
 };
 
-const mockReadDir = (ownersData, petsData) => (directory, cb) => {
+const fakeReadDir = (ownersData, petsData) => (directory, cb) => {
   return new Promise((resolve, reject) => {
     if (directory.includes('./data/owners')) resolve(Object.keys(ownersData).map((id) => `${id}.json`));
     else if (directory.includes('./data/pets')) resolve(Object.keys(petsData).map((id) => `${id}.json`));
@@ -43,7 +43,7 @@ const mockReadDir = (ownersData, petsData) => (directory, cb) => {
   });
 };
 
-const mockReadFile = (ownersData, petsData) => (fileName, encoding, cb) => {
+const fakeMockFile = (ownersData, petsData) => (fileName, encoding, cb) => {
   let ownerID, petID;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -63,8 +63,8 @@ const mockReadFile = (ownersData, petsData) => (fileName, encoding, cb) => {
 module.exports = {
   createRandomOwnerData,
   createRandomPetsData,
-  mockReadDir,
-  mockReadFile,
+  fakeReadDir,
+  fakeMockFile,
   createRandomOwner,
   createRandomPet,
 };
