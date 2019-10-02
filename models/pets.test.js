@@ -1,5 +1,5 @@
 jest.mock('fs');
-const { readFile, readdir } = require('fs');
+const { readFile, readdir } = require('fs').promises;
 const { sample } = require('lodash');
 const { fetchPetByID, fetchPetsByOwnerId } = require('./pets');
 const { createRandomPetsData, createRandomOwnerData, mockReadDir, mockReadFile } = require('./test-utils');
@@ -64,29 +64,26 @@ describe('models - unit tests', () => {
     });
 
     describe('fetchPetByID()', () => {
-      test('should fetch a single owner from the file system', (done) => {
+      test('should fetch a single owner from the file system', () => {
         const id = sample(Object.keys(petsData));
-        fetchPetByID(id, (err, pet) => {
+        return fetchPetByID(id).then((pet) => {
           expect(pet).toEqual(petsData[id]);
-          done();
         });
       });
     });
 
     describe('fetchPetsByOwnerId()', () => {
-      test('fetch all the pets with a particular owner id', (done) => {
+      test('fetch all the pets with a particular owner id', () => {
         const randomOwnerID = sample(Object.keys(ownersData));
-        fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
+        return fetchPetsByOwnerId(randomOwnerID).then((pets) => {
           const allHaveOwnerID = pets.every(({ owner }) => owner === randomOwnerID);
           expect(allHaveOwnerID).toBe(true);
-          done();
         });
       });
-      test('fetch all the pets with a particular owner id (in ascending order)', (done) => {
+      test('fetch all the pets with a particular owner id (in ascending order)', () => {
         const randomOwnerID = sample(Object.keys(ownersData));
-        fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
+        return fetchPetsByOwnerId(randomOwnerID).then((pets) => {
           expect(pets).toEqual(Object.values(petsData).filter(({ owner }) => owner === randomOwnerID));
-          done();
         });
       });
     });
