@@ -1,28 +1,24 @@
-const { readFile, readdir } = require('fs');
+const { readFile, readdir } = require('fs').promises;
 
 const fetchAllOwners = () => {
-  const allOwners = [];
-  let ownerResponses = 0;
-  readdir('./data/owners', (err, ownerFiles) => {
-    ownerFiles.forEach((ownerFile, i) => {
-      readFile(`./data/owners/${ownerFile}`, 'utf8', (err, ownerJSON) => {
-        ownerResponses++;
-        allOwners[i] = JSON.parse(ownerJSON);
-        if (ownerResponses === ownerFiles.length) {
-          cb(null, allOwners);
-        }
-      });
-    });
+  return readdir('./data/owners', 'utf8')
+  .then((ownerFiles) => {
+    const promisedOwners = ownerFiles.map((ownerFile) => {
+      return readFile(`./data/owners/${ownerFile}`, 'utf8')
+    })
+   return Promise.all(promisedOwners)
+    .then(owners => owners.map(owner => JSON.parse(owner)))
   });
-};
+}
 
-const fetchOwnerById = (ownerID, cb) => {
-  readFile(`./data/owners/${ownerID}.json`, 'utf8', (error, owner) => {
-    cb(null, JSON.parse(owner));
-  });
-};
+
+const fetchOwnerById = (ownerID) => {
+  return readFile(`./data/owners/${ownerID}.json`, 'utf8')
+  .then(owner => JSON.parse(owner))
+  };
+
 
 module.exports = {
   fetchAllOwners,
   fetchOwnerById,
-};
+}

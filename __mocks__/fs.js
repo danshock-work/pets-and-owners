@@ -1,1 +1,1 @@
-module.exports = { readFile: jest.fn(), readdir: jest.fn() };
+module.exports = {promises:{ readFile: jest.fn(), readdir: jest.fn() }};

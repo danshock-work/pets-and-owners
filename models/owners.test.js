@@ -1,5 +1,5 @@
 jest.mock('fs');
-const { readFile, readdir } = require('fs');
+const { readFile, readdir } = require('fs').promises
 const { sample } = require('lodash');
 const { fetchOwnerById, fetchAllOwners } = require('./owners');
 const { createRandomOwnerData, mockReadDir, mockReadFile } = require('./test-utils');
@@ -60,7 +60,7 @@ describe('models - unit tests', () => {
       });
     });
 
-    describe.only('fetchAllOwners()', () => {
+    describe('fetchAllOwners()', () => {
       test('should fetch the owners from the file system', () => {
         return fetchAllOwners().then((owners) => {
           owners.forEach((owner) => {
