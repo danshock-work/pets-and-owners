@@ -1,12 +1,9 @@
 {
   "name": "be-pets-and-owners",
   "version": "1.0.0",
-  "description": "[Express.js](http://expressjs.com/) is a web application framework for Node.js. It is designed for building web applications and APIs.",
-  "main": ".eslintrc.js",
+  "description": "Application for building unit and integration tests for node server",
+  "main": "",
   "scripts": {
-    "test-controllers": "jest controllers",
-    "test-models": "jest models",
-    "test-server": "jest ./server.test.js",
     "test": "jest"
   },
   "repository": {
