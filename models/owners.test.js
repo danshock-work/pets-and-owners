@@ -1,8 +1,8 @@
 jest.mock('fs');
-const { readFile, readdir } = require('fs').promises
+const { readFile, readdir } = require('fs').promises;
 const { sample } = require('lodash');
 const { fetchOwnerById, fetchAllOwners } = require('./owners');
-const { createRandomOwnerData, mockReadDir, mockReadFile } = require('./test-utils');
+const { createRandomOwnerData, mockReadDir, mockReadFile } = require('../test-utils');
 
 expect.extend({
   toBeAFunction: (inputReceived) => {

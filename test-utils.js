@@ -55,8 +55,8 @@ const mockReadFile = (ownersData, petsData) => (fileName, encoding, cb) => {
         [_, petID] = fileName.match(/\.\/data\/pets\/(p\d*)/);
         const stringifiedPet = JSON.stringify(petsData[petID]);
         if (Object.keys(petsData).includes(petID)) resolve(stringifiedPet);
-      } else reject(new Error(`ENOENT: no such file or directory, open ${fileName}`));
-    }, Math.random() * 100);
+      } else reject(new Error(`ERROR: ${fileName} does not contain any data`));
+    }, Math.random() * 40);
   });
 };
 

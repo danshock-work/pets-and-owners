@@ -2,7 +2,6 @@ const { fetchAllOwners, fetchOwnerById } = require('../models/owners');
 
 const getOwners = (request, response) => {
   fetchAllOwners().then((owners) => {
-    console.log(owners, '<--- owners');
     response.setHeader('content-type', 'application/json');
     response.write(JSON.stringify({ owners }));
     response.end();

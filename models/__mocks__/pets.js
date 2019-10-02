@@ -1,5 +1,1 @@
-const fetchPetById = jest.fn(() => {});
-
-const fetchPetsByOwnerId = jest.fn(() => {});
-
-module.exports = { fetchPetById, fetchPetsByOwnerId };
+module.exports = { fetchPetById: jest.fn(), fetchPetsByOwnerId: jest.fn() };
