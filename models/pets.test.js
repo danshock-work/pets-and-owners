@@ -63,13 +63,21 @@ describe('models - unit tests', () => {
       jest.clearAllMocks();
     });
 
+    describe('fetchPetByID()', () => {
+      test('should fetch a single owner from the file system', (done) => {
+        const id = sample(Object.keys(petsData));
+        fetchPetByID(id, (err, pet) => {
+          expect(pet).toEqual(petsData[id]);
+          done();
+        });
+      });
+    });
+
     describe('fetchPetsByOwnerId()', () => {
       test('fetch all the pets with a particular owner id', (done) => {
         const randomOwnerID = sample(Object.keys(ownersData));
         fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
-          const allHaveOwnerID = pets.every(({ owner }) => {
-            return owner === randomOwnerID;
-          });
+          const allHaveOwnerID = pets.every(({ owner }) => owner === randomOwnerID);
           expect(allHaveOwnerID).toBe(true);
           done();
         });
@@ -78,15 +86,6 @@ describe('models - unit tests', () => {
         const randomOwnerID = sample(Object.keys(ownersData));
         fetchPetsByOwnerId(randomOwnerID, (err, pets) => {
           expect(pets).toEqual(Object.values(petsData).filter(({ owner }) => owner === randomOwnerID));
-          done();
-        });
-      });
-    });
-    describe('fetchPetByID()', () => {
-      test('should fetch a single owner from the file system', (done) => {
-        const id = sample(Object.keys(petsData));
-        fetchPetByID(id, (err, pet) => {
-          expect(pet).toEqual(petsData[id]);
           done();
         });
       });

@@ -1,20 +1,23 @@
-const fs = require('fs');
+const { readFile, readdir } = require('fs');
 
-const fetchAllOwners = (cb) => {
+const fetchAllOwners = () => {
   const allOwners = [];
-  let callCount = 0;
-  fs.readdir('./data/owners', (err, fileNames) => {
-    fileNames.forEach((fileName, i) => {
-      fs.readFile(`./data/owners/${fileName}`, 'utf8', (err, owner) => {
-        allOwners[i] = JSON.parse(owner);
-        if (++callCount === fileNames.length) cb(null, allOwners);
+  let ownerResponses = 0;
+  readdir('./data/owners', (err, ownerFiles) => {
+    ownerFiles.forEach((ownerFile, i) => {
+      readFile(`./data/owners/${ownerFile}`, 'utf8', (err, ownerJSON) => {
+        ownerResponses++;
+        allOwners[i] = JSON.parse(ownerJSON);
+        if (ownerResponses === ownerFiles.length) {
+          cb(null, allOwners);
+        }
       });
     });
   });
 };
 
-const fetchOwnerById = (id, cb) => {
-  fs.readFile(`./data/owners/${id}.json`, 'utf8', (err, owner) => {
+const fetchOwnerById = (ownerID, cb) => {
+  readFile(`./data/owners/${ownerID}.json`, 'utf8', (error, owner) => {
     cb(null, JSON.parse(owner));
   });
 };

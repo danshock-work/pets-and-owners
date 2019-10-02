@@ -31,6 +31,10 @@ All of these routes should start with `/api/` as we are creating an API. Make th
 
 Unit tests for the models have already been written for you - they will involve interacting with the `fs` library's methods in order to create, read, delete or update the local data which serves as a "database". In these tests the functionality of `fs` is being mocked so instead of making an actual to call to something that performs disk I/O we are instead using a mocked version that provides a mocked implementation with some expected outcome that we would expect from the actual `fs` library.
 
+The core of the mock implementation of `fs` has been abstracted into `models/test.utils.js`: this logic is more complex but is there to emulate the behaviour of `fs` you are interacting with the `fs` API yourself.
+
+You can test the models specifically by running the command `npm test models` once you have installed `jest` as a `devDependency`.
+
 ### 2. Unit testing controller middleware
 
 Unit tests for the controller middleware have not been provided - you **must** write these first when implementing the controller functionality. When implementing the controller functionality you must demonstrate the following behaviour is taking place:

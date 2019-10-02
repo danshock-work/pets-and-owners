@@ -52,29 +52,26 @@ describe('models - unit tests', () => {
     afterEach(() => jest.clearAllMocks());
 
     describe('fetchOwnerByID()', () => {
-      test('should grab a single owner from the file system', (done) => {
+      test('should grab a single owner from the file system', () => {
         const id = sample(Object.keys(ownersData));
-        fetchOwnerById(id, (err, owner) => {
+        return fetchOwnerById(id).then((owner) => {
           expect(owner).toEqual(ownersData[id]);
-          done();
         });
       });
     });
 
-    describe('fetchAllOwners()', () => {
-      test('should fetch the owners from the file system', (done) => {
-        fetchAllOwners((err, owners) => {
+    describe.only('fetchAllOwners()', () => {
+      test('should fetch the owners from the file system', () => {
+        return fetchAllOwners().then((owners) => {
           owners.forEach((owner) => {
             expect(owners).toContain(owner);
           });
           expect(owners.length).toBe(Object.values(ownersData).length);
-          done();
         });
       });
-      test('should fetch owners from the file system in the correct order', (done) => {
-        fetchAllOwners((err, owners) => {
+      test('should fetch owners from the file system in the correct order', () => {
+        return fetchAllOwners().then((owners) => {
           expect(owners).toEqual(Object.values(ownersData));
-          done();
         });
       });
     });

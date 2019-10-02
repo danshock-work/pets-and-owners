@@ -36,24 +36,35 @@ const createRandomPetsData = (ownerIDs) => {
 };
 
 const mockReadDir = (ownersData, petsData) => (directory, cb) => {
-  if (directory.includes('./data/owners')) cb(null, Object.keys(ownersData).map((id) => `${id}.json`));
-  else if (directory.includes('./data/pets')) cb(null, Object.keys(petsData).map((id) => `${id}.json`));
-  else cb(new Error(`ENOENT: no such file or directory, open ${directory}`));
+  return new Promise((resolve, reject) => {
+    if (directory.includes('./data/owners')) resolve(Object.keys(ownersData).map((id) => `${id}.json`));
+    else if (directory.includes('./data/pets')) resolve(Object.keys(petsData).map((id) => `${id}.json`));
+    else reject(new Error(`ENOENT: no such file or directory, open ${directory}`));
+  });
 };
 
 const mockReadFile = (ownersData, petsData) => (fileName, encoding, cb) => {
   let ownerID, petID;
-  setTimeout(() => {
-    if (/\.\/data\/owners\/(o\d*)/.test(fileName)) {
-      [_, ownerID] = fileName.match(/\.\/data\/owners\/(o\d*)/);
-      const stringifiedOwner = JSON.stringify(ownersData[ownerID]);
-      if (Object.keys(ownersData).includes(ownerID)) cb(null, stringifiedOwner);
-    } else if (/\.\/data\/pets\/(p\d*)/.test(fileName)) {
-      [_, petID] = fileName.match(/\.\/data\/pets\/(p\d*)/);
-      const stringifiedPet = JSON.stringify(petsData[petID]);
-      if (Object.keys(petsData).includes(petID)) cb(null, stringifiedPet);
-    } else cb(new Error(`ENOENT: no such file or directory, open ${fileName}`));
-  }, Math.random() * 100);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (/\.\/data\/owners\/(o\d*)/.test(fileName)) {
+        [_, ownerID] = fileName.match(/\.\/data\/owners\/(o\d*)/);
+        const stringifiedOwner = JSON.stringify(ownersData[ownerID]);
+        if (Object.keys(ownersData).includes(ownerID)) resolve(stringifiedOwner);
+      } else if (/\.\/data\/pets\/(p\d*)/.test(fileName)) {
+        [_, petID] = fileName.match(/\.\/data\/pets\/(p\d*)/);
+        const stringifiedPet = JSON.stringify(petsData[petID]);
+        if (Object.keys(petsData).includes(petID)) resolve(stringifiedPet);
+      } else reject(new Error(`ENOENT: no such file or directory, open ${fileName}`));
+    }, Math.random() * 100);
+  });
 };
 
-module.exports = { createRandomOwnerData, createRandomPetsData, mockReadDir, mockReadFile };
+module.exports = {
+  createRandomOwnerData,
+  createRandomPetsData,
+  mockReadDir,
+  mockReadFile,
+  createRandomOwner,
+  createRandomPet,
+};
