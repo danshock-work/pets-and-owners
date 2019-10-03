@@ -43,8 +43,6 @@ describe('controllers - unit tests', () => {
   describe.only('getOwnerByID()', () => {
     let fakeOwnerID;
     beforeEach(() => {
-      fakeOwnerData = createRandomOwnerData();
-      fakeOwners = Object.values(fakeOwnerData);
       fakeOwnerID = sample(Object.keys(fakeOwnerData));
       fetchOwnerById.mockImplementationOnce((ownerID) =>
         fakeOwnerData[ownerID]

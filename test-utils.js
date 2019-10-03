@@ -43,7 +43,7 @@ const fakeReadDir = (ownersData, petsData) => (directory, cb) => {
   });
 };
 
-const fakeMockFile = (ownersData, petsData) => (fileName, encoding, cb) => {
+const fakeReadFile = (ownersData, petsData) => (fileName, encoding, cb) => {
   let ownerID, petID;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -64,7 +64,7 @@ module.exports = {
   createRandomOwnerData,
   createRandomPetsData,
   fakeReadDir,
-  fakeMockFile,
+  fakeReadFile,
   createRandomOwner,
   createRandomPet,
 };

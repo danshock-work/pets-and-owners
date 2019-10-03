@@ -1,1 +1,1 @@
-module.exports = { fetchPetById: jest.fn(), fetchPetsByOwnerId: jest.fn() };
+module.exports = { fetchPetByID: jest.fn(), fetchPetsByOwnerID: jest.fn() };
