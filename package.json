@@ -4,7 +4,7 @@
   "description": "Application for building unit and integration tests for node server",
   "main": "",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",
