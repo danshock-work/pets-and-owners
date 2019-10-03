@@ -9,6 +9,13 @@ const getPetByID = (request, response) => {
   });
 };
 
-const getPetsByOwnerID = (request, response) => {};
+const getPetsByOwnerID = (request, response) => {
+  const [, ownerID] = request.url.match(/\/api\/owners\/(o\d+)\/pets/);
+  fetchPetsByOwnerID(ownerID).then((pets) => {
+    response.write(JSON.stringify({ pets }));
+    response.setHeader('content-type', 'application/json');
+    response.end();
+  });
+};
 
 module.exports = { getPetByID, getPetsByOwnerID };
