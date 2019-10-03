@@ -86,7 +86,7 @@ Follow the same design flow when implementing the following end-points:
 
 #### - GET a pet using their id
 
-- end-point url : `/api/owners/:owner_id`
+- end-point url : `/api/pets/:pet_id`
 - method : `GET`
 
 #### - GET all pets belonging to an owner
