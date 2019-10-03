@@ -27,43 +27,62 @@ All of these routes should start with `/api/` as we are creating an API. Make th
 
 ## Testing flow
 
+## Day 1
+
 ### 1. Unit testing models
 
-Unit tests for the models have already been written for you - they will involve interacting with the `fs` library's methods in order to create, read, delete or update the local data which serves as a "database". In these tests the functionality of `fs` is being mocked so instead of making an actual to call to something that performs disk I/O we are instead using a mocked version that provides a mocked implementation with some expected outcome that we would expect from the actual `fs` library.
+Unit tests for the models have already been written for you - they will involve interacting with the `fs` library's methods in order to create, read, delete or update the local data which serves as a "database". In these tests the functionality of `fs` is being **faked** so instead of making an actual to call to something that performs disk I/O we are instead using a mocked version that provides a **faked** implementation with some expected outcome that we would expect from the actual `fs` library.
 
-The core of the mock implementation of `fs` has been abstracted into `models/test.utils.js`: this logic is more complex but is there to emulate the behaviour of `fs` you are interacting with the `fs` API yourself.
+The core of the mock implementation of `fs` has been abstracted into `./test.utils.js`: this logic is more complex but is there to emulate the behaviour of `fs` you are interacting with the `fs` API yourself.
 
-You can test the models specifically by running the command `npm test models` once you have installed `jest` as a `devDependency`.
+You can test the models specifically by running the command `npm test models/pets.test.js`, for example, once you have installed `jest` as a `devDependency`.
 
 ### 2. Unit testing controller middleware
 
-Unit tests for the controller middleware have not been provided - you **must** write these first when implementing the controller functionality. When implementing the controller functionality you must demonstrate the following behaviour is taking place:
+Unit tests for the controller middleware have also been provided. When implementing the controller functionality you must demonstrate the following behaviour is taking place:
 
-- is the controller speaking to (invoking) the correct model
-- is the controller setting the correct headers on the response object
-- is the controller putting the correct data on the response body
+- the controller is setting the correct headers on the response object
+- the controller is putting the correct data on the response body
+
+## Day 2
 
 ### 3. Integration testing
 
-We need to test the actual API endpoint by proving the correct data comes back from the API via the correct interaction with the controllers and the models. There should be no mocking in this test as we are demonstrating that these two units of our application are successfully interacting with each other and a client makes a request to our API.
+We need to test the actual API endpoint by demonstrating the correct data comes back from the API. There should be no mocking in this test as we are demonstrating that these two units of our application are successfully interacting with each other when a client makes a request to our API.
+
+## Here are the endpoints ...
+
+#### - GET an owner using their id
+
+- end-point url : `/api/owners/:owner_id`
+- method : `GET`
+
+##### Day 1
+
+1. Unit test the controller - `getOwnerByID()`, use `./controllers/owners.test.js`
+
+2. Unit test the model - `fetchOwnerByID()`, use `./models/owners.test.js`
+
+##### Day 2
+
+3. Integration test the end-point - ensure the controller and model are interacting correctly, use `./server/server.test.js`
 
 #### - GET all owners
 
 - end-point url : `/api/owners`
 - method : `GET`
 
-1. Unit test the model - `fetchAllOwners()`, use `./models/pets.test.js` (tests are already written for you)
+##### Day 1
 
-2. Unit test the controller - `getOwners()`, use `./models/owners.test.js`
+1. Unit test the controller - `getOwners()`, use `./controllers/owners.test.js`
 
-3. Integration test the end-point - ensure the controller and model are interacting correctly, use `./server.test.js`
+2. Unit test the model - `fetchAllOwners()`, use `./models/owners.test.js`
+
+##### Day 2
+
+3. Integration test the end-point - ensure the controller and model are interacting correctly, use `./server/server.test.js`
 
 Follow the same design flow when implementing the following end-points:
-
-#### - GET an owner using their id
-
-- end-point url : `/api/owners/:owner_id`
-- method : `GET`
 
 #### - GET a pet using their id
 
