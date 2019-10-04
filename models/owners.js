@@ -1,19 +1,16 @@
 const { readFile, readdir } = require('fs').promises;
 
-const fetchAllOwners = () => {
-  return readdir(`./data/owners/`, 'utf-8').then((owners) => {
-    return Promise.all(
-      owners.map((owner) => {
-        return fetchOwnerById(owner);
-      })
-    );
+const fetchAllOwners = async () => {
+  const allOwnersFiles = await readdir(`./data/owners/`, 'utf-8');
+  const allOwners = await allOwnersFiles.map ((owner) => {
+    return fetchOwnerById(owner);
   });
+  return Promise.all(allOwners);
 };
 
-const fetchOwnerById = (ownerID) => {
-  return readFile(`./data/owners/${ownerID}.json`, 'utf-8').then((ownerJSON) => {
-    return JSON.parse(ownerJSON);
-  });
+const fetchOwnerById = async (ownerID) => {
+   const ownerByID = await readFile(`./data/owners/${ownerID}.json`, 'utf-8').then(JSON.parse);
+   return ownerByID;
 };
 
 module.exports = {
