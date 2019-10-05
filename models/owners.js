@@ -1,11 +1,13 @@
 const { readFile, readdir } = require('fs').promises;
 
 const fetchAllOwners = async () => {
-  const allOwnersFiles = await readdir(`./data/owners/`, 'utf-8');
-  const allOwners = await allOwnersFiles.map ((owner) => {
-    return fetchOwnerById(owner);
+  let files = await readdir(`./data/owners`);
+  let promisedOwners = files.map(async (file) => {
+    let ownerJSON = await readFile(`./data/owners/${file}`, 'utf-8');
+    return JSON.parse(ownerJSON);
   });
-  return Promise.all(allOwners);
+
+  return await Promise.all(promisedOwners);
 };
 
 const fetchOwnerById = async (ownerID) => {
